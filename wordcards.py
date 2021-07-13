@@ -5,7 +5,6 @@ def make_word_cards_group():
     for i in range(0, 2):
         k, v = make_word_pair()
         word_cards[k] = v
-
     return word_cards
 
 
@@ -43,7 +42,6 @@ def transform_exported_data(lines):
     word_cards_dic = {}
     for item in lines:
         word_groups = item.split(";")
-
         for groups_items in word_groups[0:-1]:
             word_pairs = groups_items.split("-")
             word_cards_dic[word_pairs[0]] = word_pairs[1]
