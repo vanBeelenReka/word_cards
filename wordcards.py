@@ -35,7 +35,15 @@ def write_words_to_file(cards, file_name):
     with open(file_name, "w") as file:
 
         for item in clean_cards:
-            file.write(str(item[0] + "-" + item[1] + ";"))
+    file.write(serializeCards(clean_cards))
+
+def serializeCard(card):
+    return str(card[0] + "-" + card[1] + ";")
+def serializeCards(cards):
+    serializedCards = map(serializeCard, cards)
+    return ''.join(serializedCards)
+    
+
 
 
 def transform_exported_data(lines):
