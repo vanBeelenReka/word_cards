@@ -1,18 +1,14 @@
+import sys
+import ui
 
 
 def make_word_cards_group():
     word_cards = {}
+    list_labels = ["Base language: ", "It's pair: "]
     for i in range(0, 2):
-        k, v = make_word_pair()
-        word_cards[k] = v
+        card = ui.get_inputs(list_labels, "")
+        word_cards[card[0]] = card[1]
     return word_cards
-
-
-def make_word_pair():
-    first_word = input("Please, enter the base language word: ")
-    second_word = input("Please, enter the pair of the privious word: ")
-
-    return first_word, second_word
 
 
 def ask_back_words(cards):
@@ -61,13 +57,40 @@ def read_words_from_file(file_name):
     return deserialize_lines_to_cards(lines)
 
 
+def handle_menu():
+    options = ["Add new word cards",
+               "Ask back the words",
+               "Check the saved word cards"]
+
+    ui.print_menu("Main menu", options, "Exit program")
+
+
+def choose(FILE_NAME):
+    inputs = ui.get_inputs(["Please enter a number: "], "")
+    option = inputs[0]
+    if option == "1":
+        cards = make_word_cards_group()
+        write_words_to_file(cards, "word_cards.csv")
+
+    elif option == "2":
+        cards = read_words_from_file(FILE_NAME)
+        ask_back_words(cards)
+    elif option == "3":
+        print(read_words_from_file(FILE_NAME))
+    elif option == "0":
+            sys.exit(0)
+    else:
+        raise KeyError("There is no such option.")
+
+
 def main():
-    cards = make_word_cards_group()
-    # cards = {'alma': 'appel', 'korte': 'pear'}
-    print(cards)
-    ask_back_words(cards)
-    write_words_to_file(cards, "word_cards.csv")
-    print(read_words_from_file("word_cards.csv"))
+    FILE_NAME = "word_cards.csv"
+    while True:
+        handle_menu()
+        try:
+            choose(FILE_NAME)
+        except KeyError as err:
+            ui.print_error_message(str(err))
 
 
 if __name__ == "__main__":
