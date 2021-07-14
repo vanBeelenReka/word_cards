@@ -33,20 +33,19 @@ def make_cards_clean_to_write_in_a_file(cards):
 def write_words_to_file(cards, file_name):
     clean_cards = make_cards_clean_to_write_in_a_file(cards)
     with open(file_name, "w") as file:
+        file.write(serialize_cards(clean_cards))
 
-        for item in clean_cards:
-    file.write(serializeCards(clean_cards))
 
-def serializeCard(card):
+def serialize_card(card):
     return str(card[0] + "-" + card[1] + ";")
-def serializeCards(cards):
-    serializedCards = map(serializeCard, cards)
-    return ''.join(serializedCards)
-    
 
 
+def serialize_cards(cards):
+    cards_serialized = map(serialize_card, cards)
+    return ''.join(cards_serialized)
 
-def transform_exported_data(lines):
+
+def deserialize_lines_to_cards(lines):
     word_cards_dic = {}
     for item in lines:
         word_groups = item.split(";")
@@ -59,8 +58,7 @@ def transform_exported_data(lines):
 def read_words_from_file(file_name):
     with open(file_name, "r") as file:
         lines = file.readlines()
-    word_cards_dic = transform_exported_data(lines)
-    print(word_cards_dic)
+    return deserialize_lines_to_cards(lines)
 
 
 def main():
@@ -69,7 +67,7 @@ def main():
     print(cards)
     ask_back_words(cards)
     write_words_to_file(cards, "word_cards.csv")
-    read_words_from_file("word_cards.csv")
+    print(read_words_from_file("word_cards.csv"))
 
 
 if __name__ == "__main__":
