@@ -1,5 +1,6 @@
 import sys
 import ui
+import handle_files
 
 
 def make_word_cards_group():
@@ -13,48 +14,11 @@ def make_word_cards_group():
 
 def ask_back_words(cards):
     for items in cards:
-        print(items,  cards[items])
-        answer = input(items + " ")
+        answer = input(items + ": ")
         if answer == cards[items]:
             print("Correct!")
         else:
             print("Wrong")
-
-
-def make_cards_clean_to_write_in_a_file(cards):
-    clean_cards = list(cards.items())
-    return clean_cards
-
-
-def write_words_to_file(cards, file_name):
-    clean_cards = make_cards_clean_to_write_in_a_file(cards)
-    with open(file_name, "w") as file:
-        file.write(serialize_cards(clean_cards))
-
-
-def serialize_card(card):
-    return str(card[0] + "-" + card[1] + ";")
-
-
-def serialize_cards(cards):
-    cards_serialized = map(serialize_card, cards)
-    return ''.join(cards_serialized)
-
-
-def deserialize_lines_to_cards(lines):
-    word_cards_dic = {}
-    for item in lines:
-        word_groups = item.split(";")
-        for groups_items in word_groups[0:-1]:
-            word_pairs = groups_items.split("-")
-            word_cards_dic[word_pairs[0]] = word_pairs[1]
-    return word_cards_dic
-
-
-def read_words_from_file(file_name):
-    with open(file_name, "r") as file:
-        lines = file.readlines()
-    return deserialize_lines_to_cards(lines)
 
 
 def handle_menu():
@@ -70,13 +34,13 @@ def choose(FILE_NAME):
     option = inputs[0]
     if option == "1":
         cards = make_word_cards_group()
-        write_words_to_file(cards, "word_cards.csv")
+        handle_files.write_words_to_file(cards, "word_cards.csv")
 
     elif option == "2":
-        cards = read_words_from_file(FILE_NAME)
+        cards = handle_files.read_words_from_file(FILE_NAME)
         ask_back_words(cards)
     elif option == "3":
-        print(read_words_from_file(FILE_NAME))
+        print(handle_files.read_words_from_file(FILE_NAME))
     elif option == "0":
             sys.exit(0)
     else:

@@ -17,3 +17,12 @@ def get_inputs(list_labels, title):
     for lable in list_labels:
         user_data.append(input(lable + " "))
     return user_data
+
+
+def serialize_card(card):
+    return str(card[0] + "--" + card[1] + ";")
+
+
+def serialize_cards(cards):
+    cards_serialized = map(serialize_card, cards)
+    return ''.join(cards_serialized)
