@@ -1,36 +1,100 @@
+#the ask back  - multiple choice does not work. needs a split
+
+import sys
+import ui
+import handle_files
+import serialize_data
 
 
 def make_word_cards_group():
     word_cards = {}
+    list_labels = ["Base language: ", "It's pair: "]
     for i in range(0, 2):
-        k, v = make_word_pair()
-        word_cards[k] = v
-
+        card = ui.get_inputs(list_labels, "")
+        word_cards[card[0]] = card[1]
     return word_cards
 
 
-def make_word_pair():
-    first_word = input("Please, enter the base language word: ")
-    second_word = input("Please, enter the pair of the privious word: ")
-
-    return first_word, second_word
-
-
-def ask_back_words(cards):
+def ask_back_words(data, index=0):
+    cards = serialize_data.deserialize_data_to_group(data, index)
     for items in cards:
-        print(items,  cards[items])
-        answer = input(items + " ")
+        answer = input(items + ": ")
         if answer == cards[items]:
             print("Correct!")
         else:
             print("Wrong")
 
 
+def handle_menu():
+    options = ["Add new word cards",
+               "Ask back the words",
+               "Check the saved word cards"]
+
+    ui.print_menu("Main menu", options, "Exit program")
+
+
+def handle_ask_back_menu():
+    options = ["Ask back from the whole stack",
+               "Ask back from a single group",
+               "Ask back from multiple groups"]
+    ui.print_menu("Ask back words", options, "Back")
+
+
+def ask_back_option(cards):
+    handle_ask_back_menu()
+    inputs = ui.get_inputs(["Please enter a number: "], "")
+    option = inputs[0]
+    if option == "1":
+        for i in range(0, len(cards)):
+            ask_back_words(cards, i)
+    elif option == "2":
+        group_number = ui.get_inputs(["Please enter the number of the group: "], "")
+        if group_number[0].isnumeric():
+            if (int(group_number[0]) > 0 and int(group_number[0]) <= len(cards)):
+                ask_back_words(cards, int(group_number[0])-1)
+            else:
+                ui.print_error_message("Wrong input range")
+        else:
+            ui.print_error_message("Wrong input type")
+    elif option == "3":
+        group_numbers = ui.get_inputs(["Please enter the numbers of the groups: "], "")
+        indexes = group_numbers[0].split(" ")
+        for item in indexes:
+            if item.isnumeric():
+                if (int(item) > 0 and int(item) <= len(cards)):
+                    ask_back_words(cards, int(item)-1)
+                else:
+                    ui.print_error_message("Wrong input range")
+            else:
+                ui.print_error_message("Wrong input type")
+
+
+def choose(FILE_NAME):
+    inputs = ui.get_inputs(["Please enter a number: "], "")
+    option = inputs[0]
+    if option == "1":
+        cards = make_word_cards_group()
+        handle_files.write_words_to_file(cards, "word_cards.csv")
+
+    elif option == "2":
+        cards = handle_files.read_words_from_file(FILE_NAME)
+        ask_back_option(cards)
+    elif option == "3":
+        print(handle_files.read_words_from_file(FILE_NAME))
+    elif option == "0":
+        sys.exit(0)
+    else:
+        raise KeyError("There is no such option.")
+
+
 def main():
-    # cards = make_word_cards_group()
-    cards = {'alma': 'appel', 'korte': 'pear'}
-    print(cards)
-    ask_back_words(cards)
+    FILE_NAME = "word_cards.csv"
+    while True:
+        handle_menu()
+        try:
+            choose(FILE_NAME)
+        except KeyError as err:
+            ui.print_error_message(str(err))
 
 
 if __name__ == "__main__":
