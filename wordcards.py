@@ -1,25 +1,26 @@
-#the ask back  - multiple choice does not work. needs a split
-
 import sys
 import ui
 import handle_files
-import serialize_data
+import random
 
 
 def make_word_cards_group():
     word_cards = {}
     list_labels = ["Base language: ", "It's pair: "]
-    for i in range(0, 2):
+    for i in range(0, 3):
         card = ui.get_inputs(list_labels, "")
         word_cards[card[0]] = card[1]
     return word_cards
 
 
-def ask_back_words(data, index=0):
-    cards = serialize_data.deserialize_data_to_group(data, index)
-    for items in cards:
-        answer = input(items + ": ")
-        if answer == cards[items]:
+def ask_back_words(data, group_number=0):
+    cards = data[group_number]
+    base_language_words = list(cards.keys())
+    random.shuffle(base_language_words)
+
+    for item in base_language_words:
+        answer = input(item + ": ")
+        if answer == cards[item]:
             print("Correct!")
         else:
             print("Wrong")
@@ -85,17 +86,3 @@ def choose(FILE_NAME):
         sys.exit(0)
     else:
         raise KeyError("There is no such option.")
-
-
-def main():
-    FILE_NAME = "word_cards.csv"
-    while True:
-        handle_menu()
-        try:
-            choose(FILE_NAME)
-        except KeyError as err:
-            ui.print_error_message(str(err))
-
-
-if __name__ == "__main__":
-    main()
