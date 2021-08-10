@@ -1,7 +1,6 @@
 import sys
 import ui
 import handle_files
-import serialize_data
 import random
 
 
@@ -16,12 +15,10 @@ def make_word_cards_group():
 
 def ask_back_words(data, group_number=0):
     cards = data[group_number]
-    base_languge_words = list(cards.keys())
-    random_indexes = list(range(0, len(base_languge_words)))
-    random.shuffle(random_indexes)
+    base_language_words = list(cards.keys())
+    random.shuffle(base_language_words)
 
-    for index in random_indexes:
-        item = base_languge_words[index]
+    for item in base_language_words:
         answer = input(item + ": ")
         if answer == cards[item]:
             print("Correct!")
