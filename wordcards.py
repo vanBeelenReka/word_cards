@@ -1,5 +1,3 @@
-#the ask back  - multiple choice does not work. needs a split
-
 import sys
 import ui
 import handle_files
@@ -16,7 +14,7 @@ def make_word_cards_group():
 
 
 def ask_back_words(data, index=0):
-    cards = serialize_data.deserialize_data_to_group(data, index)
+    cards = serialize_data.deserialize_data_to_double_language_group(data, index)
     for items in cards:
         answer = input(items + ": ")
         if answer == cards[items]:
@@ -85,17 +83,3 @@ def choose(FILE_NAME):
         sys.exit(0)
     else:
         raise KeyError("There is no such option.")
-
-
-def main():
-    FILE_NAME = "word_cards.csv"
-    while True:
-        handle_menu()
-        try:
-            choose(FILE_NAME)
-        except KeyError as err:
-            ui.print_error_message(str(err))
-
-
-if __name__ == "__main__":
-    main()
