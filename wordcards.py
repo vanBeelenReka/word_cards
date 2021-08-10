@@ -1,7 +1,7 @@
 import sys
 import ui
 import handle_files
-import serialize_data
+import copy
 
 
 def make_word_cards_group():
@@ -13,11 +13,18 @@ def make_word_cards_group():
     return word_cards
 
 
+def transform_data_to_double_language_group(data, index):
+    new_pairs = copy.deepcopy(data[index])
+    for key in data[index]:
+        new_pairs[new_pairs[key]] = key
+    return new_pairs
+
+
 def ask_back_words(data, index=0):
-    cards = serialize_data.deserialize_data_to_double_language_group(data, index)
-    for items in cards:
+    both_language_cards = transform_data_to_double_language_group(data, index)
+    for items in both_language_cards:
         answer = input(items + ": ")
-        if answer == cards[items]:
+        if answer == both_language_cards[items]:
             print("Correct!")
         else:
             print("Wrong")

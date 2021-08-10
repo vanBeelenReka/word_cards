@@ -1,6 +1,3 @@
-import copy
-
-
 def serialize_card(card):
     return str(card[0] + "--" + card[1] + ";")
 
@@ -21,9 +18,3 @@ def deserialize_lines_to_cards(raw_data):
         pairs.append(word_cards_dic)
     return pairs
 
-
-def deserialize_data_to_double_language_group(data, index):
-    dic = copy.deepcopy(data[index])
-    for key in data[index]:
-        dic[dic[key]] = key
-    return dic
