@@ -2,6 +2,7 @@ import sys
 import ui
 import handle_files
 import copy
+from random import shuffle
 
 
 def make_word_cards_group():
@@ -22,12 +23,21 @@ def transform_data_to_double_language_group(data, index):
 
 def ask_back_words(data, index=0):
     both_language_cards = transform_data_to_double_language_group(data, index)
-    for items in both_language_cards:
-        answer = input(items + ": ")
-        if answer == both_language_cards[items]:
+    asking_words = list(both_language_cards.keys())
+    shuffle(asking_words)
+    for word in asking_words:
+        answer = input(f"{word}: ")
+        if answer == both_language_cards[word]:
             print("Correct!")
         else:
             print("Wrong")
+
+
+def put_together_stacks(list_of_cards):
+    new_dict = {}
+    for stack_cards in list_of_cards:
+        new_dict = {**new_dict, **stack_cards}
+    return (new_dict)
 
 
 def handle_menu():
@@ -50,8 +60,8 @@ def ask_back_option(cards):
     inputs = ui.get_inputs(["Please enter a number: "], "")
     option = inputs[0]
     if option == "1":
-        for i in range(0, len(cards)):
-            ask_back_words(cards, i)
+    
+        ask_back_words(put_together_stacks(cards))
     elif option == "2":
         group_number = ui.get_inputs(["Please enter the number of the group: "], "")
         if group_number[0].isnumeric():
@@ -83,7 +93,8 @@ def choose(FILE_NAME):
 
     elif option == "2":
         cards = handle_files.read_words_from_file(FILE_NAME)
-        ask_back_option(cards)
+        ask_back_words(put_together_stacks(cards))
+        # ask_back_option(cards)
     elif option == "3":
         print(handle_files.read_words_from_file(FILE_NAME))
     elif option == "0":

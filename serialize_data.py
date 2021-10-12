@@ -17,4 +17,3 @@ def deserialize_lines_to_cards(raw_data):
             word_cards_dic[words[0]] = words[1]
         pairs.append(word_cards_dic)
     return pairs
-
